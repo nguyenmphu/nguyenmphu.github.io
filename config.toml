@@ -38,3 +38,7 @@ paginate = 20
 [social]
   linkedin = "nguyenmphu"
   github = "nguyenmphu"
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"

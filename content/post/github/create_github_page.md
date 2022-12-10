@@ -2,6 +2,8 @@
 title: "Create a Github page with Hugo and Github Action"
 date: 2022-12-10T20:59:22+07:00
 draft: false
+categories: [github, web]
+tags: [github, ci/cd]
 ---
 ## Prerequisites
 - An account Github
