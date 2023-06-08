@@ -1,0 +1,6 @@
+[book]
+authors = ["nguyenmphu"]
+language = "en"
+multilingual = false
+src = "src"
+title = "nguyenmphu's notebook"
