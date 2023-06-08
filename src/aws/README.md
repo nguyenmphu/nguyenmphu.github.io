@@ -1,0 +1,1 @@
+This is my note when studying AWS. My goal is getting AWS Solution Architect Associate Certificate.
