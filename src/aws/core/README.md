@@ -1,6 +1,6 @@
 # Core Services
 ## AWS service categories
-- Compute
+- [Compute](./compute.md)
 - Networking
 - Storage
 - Database
