@@ -4,7 +4,8 @@
 
 [AWS](aws/README.md)
 - [Core Services](aws/core/README.md)
-    - [Compute](aws/core/compute.md)
+    - [Compute](aws/core/compute/README.md)
+        - [EC2](aws/core/compute/ec2.md)
     - [Network](aws/core/network.md)
     - [Storage](aws/core/storage.md)
     - [Database](aws/core/database.md)
