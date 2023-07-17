@@ -21,5 +21,6 @@
     - [IAM](aws/core/iam.md)
     - [Monitoring](aws/core/monitoring.md)
     - [CI/CD](aws/core/ci_cd.md)
-
+- [Well-Architected](aws/well-architected/README.md)
+- [Cloud-Acquisition](aws/cloud-acquisition/README.md)
 ---
