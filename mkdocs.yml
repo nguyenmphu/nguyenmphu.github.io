@@ -1,4 +1,13 @@
-site_name: My Docs
+site_name: nguyenmphu's notebook
 site_url: https://nguyenmphu.github.io
 theme:
   name: material
+  palette:
+    primary: blue grey
+  features:
+    - header.autohide
+
+plugins: 
+  - search
+  # - blog
+  - tags
