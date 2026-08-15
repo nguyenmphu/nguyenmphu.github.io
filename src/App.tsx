@@ -7,6 +7,7 @@ import ChecksumTool from './components/ChecksumTool.tsx'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './components/ui/sidebar.tsx'
 
 const PrettifyTool = lazy(() => import('./components/PrettifyTool.tsx'))
+const QrCodeTool = lazy(() => import('./components/QrCodeTool.tsx'))
 
 function App() {
   const [activeTool, setActiveTool] = useState('Base64')
@@ -23,6 +24,11 @@ function App() {
         {activeTool === 'Prettify' && (
           <Suspense fallback={<div className="grid flex-1 place-items-center text-sm text-muted-foreground">Loading formatter…</div>}>
             <PrettifyTool />
+          </Suspense>
+        )}
+        {activeTool === 'QR Generator' && (
+          <Suspense fallback={<div className="grid flex-1 place-items-center text-sm text-muted-foreground">Loading QR generator…</div>}>
+            <QrCodeTool />
           </Suspense>
         )}
       </SidebarInset>

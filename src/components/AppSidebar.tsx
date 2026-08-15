@@ -1,4 +1,4 @@
-import { Binary, Braces, Hash, Laptop, Sparkles } from 'lucide-react'
+import { Binary, Braces, Hash, Laptop, QrCode, Sparkles } from 'lucide-react'
 
 import {
   Sidebar,
@@ -19,21 +19,20 @@ interface AppSidebarProps {
   onSelectTool: (tool: string) => void
 }
 
-const TOOLS = [
+const TOOL_GROUPS = [
   {
-    name: 'Base64',
-    description: 'Encode and decode text',
-    icon: Binary,
+    label: 'Text tools',
+    tools: [
+      { name: 'Base64', description: 'Encode and decode text', icon: Binary },
+      { name: 'Checksum', description: 'Verify file integrity', icon: Hash },
+      { name: 'Prettify', description: 'Format structured data', icon: Sparkles },
+    ],
   },
   {
-    name: 'Checksum',
-    description: 'Verify file integrity',
-    icon: Hash,
-  },
-  {
-    name: 'Prettify',
-    description: 'Format structured data',
-    icon: Sparkles,
+    label: 'Image tools',
+    tools: [
+      { name: 'QR Generator', description: 'Create QR codes from text', icon: QrCode },
+    ],
   },
 ]
 
@@ -53,33 +52,33 @@ export default function AppSidebar({ activeTool, onSelectTool }: AppSidebarProps
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup className="px-2 py-4">
-          <SidebarGroupLabel>Tools</SidebarGroupLabel>
-          <SidebarMenu>
-            {TOOLS.map((tool) => (
-              <SidebarMenuItem key={tool.name}>
-                <SidebarMenuButton
-                  type="button"
-                  size="lg"
-                  tooltip={tool.name}
-                  isActive={activeTool === tool.name}
-                  onClick={() => onSelectTool(tool.name)}
-                  className="h-auto min-h-12 gap-3 px-3 py-2.5 data-active:bg-sidebar-primary data-active:text-sidebar-primary-foreground group-data-[collapsible=icon]:min-h-8! group-data-[collapsible=icon]:justify-center"
-                >
-                  <tool.icon className="size-4" aria-hidden="true" />
-                  <span className="min-w-0 group-data-[collapsible=icon]:hidden">
-                    <span className="block truncate text-sm font-medium normal-case tracking-normal">
-                      {tool.name}
+        {TOOL_GROUPS.map((group) => (
+          <SidebarGroup key={group.label} className="px-2 py-3">
+            <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+            <SidebarMenu>
+              {group.tools.map((tool) => (
+                <SidebarMenuItem key={tool.name}>
+                  <SidebarMenuButton
+                    type="button"
+                    size="lg"
+                    tooltip={tool.name}
+                    isActive={activeTool === tool.name}
+                    onClick={() => onSelectTool(tool.name)}
+                    className="h-auto min-h-12 gap-3 px-3 py-2.5 data-active:bg-sidebar-primary data-active:text-sidebar-primary-foreground group-data-[collapsible=icon]:min-h-8! group-data-[collapsible=icon]:justify-center"
+                  >
+                    <tool.icon className="size-4" aria-hidden="true" />
+                    <span className="min-w-0 group-data-[collapsible=icon]:hidden">
+                      <span className="block truncate text-sm font-medium normal-case tracking-normal">{tool.name}</span>
+                      <span className="block truncate text-xs font-normal normal-case tracking-normal opacity-60">
+                        {tool.description}
+                      </span>
                     </span>
-                    <span className="block truncate text-xs font-normal normal-case tracking-normal opacity-60">
-                      {tool.description}
-                    </span>
-                  </span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarSeparator className="mx-0! data-horizontal:w-full!" />
