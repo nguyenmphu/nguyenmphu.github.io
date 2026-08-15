@@ -111,9 +111,11 @@ export default function Base64Tool() {
 
         <div className="grid min-w-0 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
           <div className="min-w-0 space-y-3 p-4 lg:flex lg:min-h-0 lg:flex-col lg:p-5">
-            <label htmlFor="base64-input" className="text-xs font-semibold tracking-wider uppercase">
-              {isEncoding ? 'Plain text' : 'Base64'}
-            </label>
+            <div className="flex h-7 items-center">
+              <label htmlFor="base64-input" className="text-xs font-semibold tracking-wider uppercase">
+                {isEncoding ? 'Plain text' : 'Base64'}
+              </label>
+            </div>
             <Textarea
               id="base64-input"
               value={input}
@@ -132,7 +134,7 @@ export default function Base64Tool() {
           </div>
 
           <div className="min-w-0 space-y-3 p-4 lg:flex lg:min-h-0 lg:flex-col lg:p-5">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex h-7 items-center justify-between gap-3">
               <label htmlFor="base64-output" className="text-xs font-semibold tracking-wider uppercase">
                 {isEncoding ? 'Base64' : 'Plain text'}
               </label>

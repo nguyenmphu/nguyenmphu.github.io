@@ -157,12 +157,14 @@ export default function PrettifyTool() {
 
         <div className="grid min-w-0 lg:min-h-0 lg:flex-1 lg:grid-cols-2">
           <div className="min-w-0 space-y-3 border-b border-border p-4 lg:flex lg:min-h-0 lg:flex-col lg:border-r lg:border-b-0 lg:p-5">
-            <label
-              htmlFor="prettify-input"
-              className="text-xs font-semibold tracking-wider uppercase"
-            >
-              Input
-            </label>
+            <div className="flex h-7 items-center">
+              <label
+                htmlFor="prettify-input"
+                className="text-xs font-semibold tracking-wider uppercase"
+              >
+                Input
+              </label>
+            </div>
             <Textarea
               id="prettify-input"
               value={input}
@@ -186,7 +188,7 @@ export default function PrettifyTool() {
           </div>
 
           <div className="min-w-0 space-y-3 p-4 lg:flex lg:min-h-0 lg:flex-col lg:p-5">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex h-7 items-center justify-between gap-3">
               <label
                 htmlFor="prettify-output"
                 className="text-xs font-semibold tracking-wider uppercase"
