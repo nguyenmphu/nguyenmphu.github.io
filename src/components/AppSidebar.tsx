@@ -1,4 +1,4 @@
-import { Binary, Braces, Hash, Laptop } from 'lucide-react'
+import { Binary, Braces, Hash, Laptop, Sparkles } from 'lucide-react'
 
 import {
   Sidebar,
@@ -29,6 +29,11 @@ const TOOLS = [
     name: 'Checksum',
     description: 'Verify file integrity',
     icon: Hash,
+  },
+  {
+    name: 'Prettify',
+    description: 'Format structured data',
+    icon: Sparkles,
   },
 ]
 
