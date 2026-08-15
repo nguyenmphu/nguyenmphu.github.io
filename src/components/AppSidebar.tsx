@@ -26,7 +26,7 @@ const TOOLS = [
     icon: Binary,
   },
   {
-    name: 'CheckSum',
+    name: 'Checksum',
     description: 'Verify file integrity',
     icon: Hash,
   },
