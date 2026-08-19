@@ -49,11 +49,11 @@ bunx tsc --noEmit    # Type-check without emitting
 - Include `.tsx` / `.ts` extension in local imports (`allowImportingTsExtensions: true`).
 
 ```tsx
-import { useState } from 'react'
-import { createRoot } from 'react-dom/client'
-import reactLogo from './assets/react.svg'
-import './App.css'
-import App from './App.tsx'
+import { useState } from "react";
+import { createRoot } from "react-dom/client";
+import reactLogo from "./assets/react.svg";
+import "./App.css";
+import App from "./App.tsx";
 ```
 
 ### Formatting
@@ -75,13 +75,17 @@ No Prettier/Biome configured. Rely on ESLint for enforcement. Use 2-space indent
 
 ```tsx
 interface ButtonProps {
-  label: string
-  onClick: () => void
-  disabled?: boolean
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
 }
 
 function Button({ label, onClick, disabled }: ButtonProps) {
-  return <button type="button" onClick={onClick} disabled={disabled}>{label}</button>
+  return (
+    <button type="button" onClick={onClick} disabled={disabled}>
+      {label}
+    </button>
+  );
 }
 ```
 
@@ -106,6 +110,7 @@ function Button({ label, onClick, disabled }: ButtonProps) {
 - Always use `type="button"` on `<button>` elements inside forms.
 - Use `<Fragment>` or `<>` shorthand for multiple root elements.
 - SVG icons: load via `<use href="/icons.svg#id">` sprite sheet from `public/`.
+- Use Shadcn for UI components. When needing not existed components, first install it via command `bunx --bun shadcn@latest add <component>`.
 
 ### React & Hooks
 

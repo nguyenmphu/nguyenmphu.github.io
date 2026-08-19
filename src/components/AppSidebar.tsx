@@ -1,4 +1,4 @@
-import { Binary, Braces, Hash, Laptop, QrCode, Sparkles } from 'lucide-react'
+import { Binary, Braces, Hash, Laptop, QrCode, Table2, Sparkles } from 'lucide-react'
 
 import {
   Sidebar,
@@ -26,6 +26,12 @@ const TOOL_GROUPS = [
       { name: 'Base64', description: 'Encode and decode text', icon: Binary },
       { name: 'Checksum', description: 'Verify file integrity', icon: Hash },
       { name: 'Prettify', description: 'Format structured data', icon: Sparkles },
+    ],
+  },
+  {
+    label: 'Data tools',
+    tools: [
+      { name: 'Data', description: 'Query files with SQL', icon: Table2 },
     ],
   },
   {
