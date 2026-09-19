@@ -1,9 +1,19 @@
-import { ChangeEvent, useState } from 'react'
+import { useState } from 'react'
 import { Check, Clipboard, FileText, Type } from 'lucide-react'
-
-import { Button } from './ui/button.tsx'
-import { Input } from './ui/input.tsx'
-import { Textarea } from './ui/textarea.tsx'
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Code,
+  FileInput,
+  Group,
+  Paper,
+  SegmentedControl,
+  Stack,
+  Text,
+  Textarea,
+  Title,
+} from '@mantine/core'
 
 type Algorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512'
 type InputMode = 'text' | 'file'
@@ -124,8 +134,8 @@ export default function ChecksumTool() {
     setIsCopied(false)
   }
 
-  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
-    setFile(event.target.files?.[0] ?? null)
+  function handleFileChange(selectedFile: File | null) {
+    setFile(selectedFile)
     setChecksum('')
     setIsCopied(false)
   }
@@ -153,84 +163,72 @@ export default function ChecksumTool() {
   }
 
   return (
-    <section className="flex min-h-0 w-full flex-1 flex-col gap-4 overflow-auto px-4 py-5 sm:px-6 lg:overflow-hidden lg:px-8 lg:py-6">
-      <header className="space-y-2">
-        <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">Developer tool</p>
-        <h1 className="font-heading text-4xl font-semibold tracking-tight md:text-5xl">Checksum</h1>
-        <p className="max-w-2xl text-sm leading-6 text-muted-foreground md:text-base">
+    <Stack gap="lg" h="100%" style={{ overflowY: 'auto' }}>
+      <Stack gap={4}>
+        <Text size="xs" fw={700} tt="uppercase" c="dimmed" lts={2}>Developer tool</Text>
+        <Title order={1}>Checksum</Title>
+        <Text c="dimmed" maw={720}>
           Generate a digest from text or a local file. Files are processed entirely in your browser.
-        </p>
-      </header>
+        </Text>
+      </Stack>
 
-      <div className="w-full min-w-0 border border-border bg-card lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
-        <div className="shrink-0 border-b border-border p-4 md:p-5">
-          <p className="mb-3 text-xs font-semibold tracking-wider uppercase">Algorithm</p>
-          <div className="flex flex-wrap gap-2">
-            {ALGORITHMS.map((item) => (
-              <Button
-                key={item}
-                type="button"
-                size="sm"
-                variant={algorithm === item ? 'default' : 'outline'}
-                onClick={() => {
-                  setAlgorithm(item)
-                  setChecksum('')
-                }}
-              >
-                {item}
-              </Button>
-            ))}
-          </div>
-        </div>
+      <Paper withBorder style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+        <Stack p="md">
+          <Text size="sm" fw={600}>Algorithm</Text>
+          <SegmentedControl
+            value={algorithm}
+            onChange={(value) => {
+              setAlgorithm(value as Algorithm)
+              setChecksum('')
+            }}
+            data={ALGORITHMS}
+          />
+        </Stack>
 
-        <div className="p-4 md:p-5 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
-          <div className="mb-4 flex gap-1 bg-muted p-1 sm:w-fit">
-            <Button type="button" size="sm" variant={inputMode === 'text' ? 'default' : 'ghost'} onClick={() => handleModeChange('text')}>
-              <Type data-icon="inline-start" /> Text
-            </Button>
-            <Button type="button" size="sm" variant={inputMode === 'file' ? 'default' : 'ghost'} onClick={() => handleModeChange('file')}>
-              <FileText data-icon="inline-start" /> File
-            </Button>
-          </div>
+        <Stack p="md" style={{ flex: 1, borderTop: '1px solid var(--mantine-color-default-border)' }}>
+          <SegmentedControl
+            value={inputMode}
+            onChange={(value) => handleModeChange(value as InputMode)}
+            data={[
+              { label: <Group gap={6}><Type size={15} />Text</Group>, value: 'text' },
+              { label: <Group gap={6}><FileText size={15} />File</Group>, value: 'file' },
+            ]}
+          />
 
           {inputMode === 'text' ? (
-            <div className="lg:flex lg:min-h-0 lg:flex-1">
-              <Textarea
-                value={text}
-                onChange={(event) => {
-                  setText(event.target.value)
-                  setChecksum('')
-                }}
-                placeholder="Enter text to calculate its checksum…"
-                className="min-h-48 font-mono lg:min-h-0 lg:flex-1 lg:resize-none"
-              />
-            </div>
+            <Textarea
+              value={text}
+              onChange={(event) => {
+                setText(event.target.value)
+                setChecksum('')
+              }}
+              placeholder="Enter text to calculate its checksum…"
+              minRows={10}
+              autosize
+              styles={{ input: { fontFamily: 'monospace' } }}
+            />
           ) : (
-            <div className="border border-dashed border-input p-6 lg:grid lg:min-h-0 lg:flex-1 lg:place-content-center">
-              <div className="w-full max-w-xl">
-                <Input type="file" onChange={handleFileChange} className="cursor-pointer" />
-                <p className="mt-3 text-xs text-muted-foreground">
-                  {file ? `${file.name} · ${formatFileSize(file.size)}` : 'Choose a file from your device.'}
-                </p>
-              </div>
-            </div>
+            <Box p="xl" style={{ border: '1px dashed var(--mantine-color-default-border)', borderRadius: 'var(--mantine-radius-md)' }}>
+              <FileInput label="Local file" placeholder="Choose a file from your device" onChange={handleFileChange} />
+              {file && <Text size="xs" c="dimmed" mt="xs">{file.name} · {formatFileSize(file.size)}</Text>}
+            </Box>
           )}
-        </div>
+        </Stack>
 
-        <div className="flex shrink-0 flex-wrap items-center gap-3 border-t border-border p-4 md:p-5">
-          <Button type="button" onClick={handleCalculate} disabled={!hasInput || isCalculating}>
+        <Group p="md" style={{ borderTop: '1px solid var(--mantine-color-default-border)' }}>
+          <Button onClick={handleCalculate} disabled={!hasInput} loading={isCalculating}>
             {isCalculating ? 'Calculating…' : `Generate ${algorithm}`}
           </Button>
           {checksum && (
-            <div className="flex min-w-0 flex-1 items-center gap-2 border border-border bg-muted/40 px-3 py-2">
-              <code className="min-w-0 flex-1 overflow-x-auto text-xs">{checksum}</code>
-              <Button type="button" variant="ghost" size="icon-xs" onClick={handleCopy} aria-label="Copy checksum">
-                {isCopied ? <Check /> : <Clipboard />}
-              </Button>
-            </div>
+            <Group gap="xs" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
+              <Code block style={{ flex: 1, overflowX: 'auto' }}>{checksum}</Code>
+              <ActionIcon variant="subtle" onClick={handleCopy} aria-label="Copy checksum">
+                {isCopied ? <Check size={16} /> : <Clipboard size={16} />}
+              </ActionIcon>
+            </Group>
           )}
-        </div>
-      </div>
-    </section>
+        </Group>
+      </Paper>
+    </Stack>
   )
 }

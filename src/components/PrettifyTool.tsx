@@ -1,9 +1,19 @@
 import { useState } from "react";
 import { Check, Clipboard, Eraser, Sparkles } from "lucide-react";
 import { format as formatSql } from "sql-formatter";
-
-import { Button } from "./ui/button.tsx";
-import { Textarea } from "./ui/textarea.tsx";
+import { Plugin } from "prettier";
+import {
+  Alert,
+  Button,
+  Group,
+  Paper,
+  SegmentedControl,
+  SimpleGrid,
+  Stack,
+  Text,
+  Textarea,
+  Title,
+} from "@mantine/core";
 
 type Format = "JSON" | "YAML" | "SQL" | "HTML" | "CSS" | "Markdown";
 
@@ -28,8 +38,8 @@ async function prettifySource(source: string, format: Format) {
   }
 
   const prettier = await import("prettier/standalone");
-  let parser = "";
-  let plugins = [];
+  let parser: string;
+  let plugins: Plugin[];
 
   if (format === "JSON") {
     const [babelPlugin, estreePlugin] = await Promise.all([
@@ -115,56 +125,40 @@ export default function PrettifyTool() {
   }
 
   return (
-    <section className="flex min-h-0 w-full flex-1 flex-col gap-4 overflow-auto px-4 py-5 sm:px-6 lg:overflow-hidden lg:px-8 lg:py-6">
-      <header className="space-y-2">
-        <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-          Developer tool
-        </p>
-        <h1 className="font-heading text-4xl font-semibold tracking-tight md:text-5xl">
-          Prettify
-        </h1>
-        <p className="max-w-2xl text-sm leading-6 text-muted-foreground md:text-base">
+    <Stack gap="lg" h="100%" style={{ overflowY: "auto" }}>
+      <Stack gap={4}>
+        <Text size="xs" fw={700} tt="uppercase" c="dimmed" lts={2}>Developer tool</Text>
+        <Title order={1}>Prettify</Title>
+        <Text c="dimmed" maw={720}>
           Turn compact or inconsistent source into clean, readable code directly
           in your browser.
-        </p>
-      </header>
+        </Text>
+      </Stack>
 
-      <div className="w-full min-w-0 border border-border bg-card lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-border p-4">
-          <div className="flex flex-wrap gap-2" aria-label="Source format">
-            {FORMATS.map((item) => (
-              <Button
-                key={item}
-                type="button"
-                size="sm"
-                variant={format === item ? "default" : "outline"}
-                onClick={() => handleFormatChange(item)}
-              >
-                {item}
-              </Button>
-            ))}
-          </div>
+      <Paper withBorder style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
+        <Group justify="space-between" p="md">
+          <SegmentedControl
+            aria-label="Source format"
+            value={format}
+            onChange={(value) => handleFormatChange(value as Format)}
+            data={FORMATS}
+          />
           <Button
-            type="button"
-            variant="ghost"
-            size="sm"
+            variant="subtle"
+            color="gray"
+            leftSection={<Eraser size={16} />}
             onClick={handleClear}
             disabled={!input && !output}
           >
-            <Eraser data-icon="inline-start" /> Clear
+            Clear
           </Button>
-        </div>
+        </Group>
 
-        <div className="grid min-w-0 lg:min-h-0 lg:flex-1 lg:grid-cols-2">
-          <div className="min-w-0 space-y-3 border-b border-border p-4 lg:flex lg:min-h-0 lg:flex-col lg:border-r lg:border-b-0 lg:p-5">
-            <div className="flex h-7 items-center">
-              <label
-                htmlFor="prettify-input"
-                className="text-xs font-semibold tracking-wider uppercase"
-              >
-                Input
-              </label>
-            </div>
+        <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md" p="md" style={{ flex: 1, minHeight: 0, borderTop: "1px solid var(--mantine-color-default-border)" }}>
+          <Stack gap="xs" h="100%">
+            <Group h={30} align="center">
+              <Text size="sm" fw={500}>Input</Text>
+            </Group>
             <Textarea
               id="prettify-input"
               value={input}
@@ -174,63 +168,47 @@ export default function PrettifyTool() {
                 setError("");
               }}
               placeholder={PLACEHOLDERS[format]}
-              aria-invalid={Boolean(error)}
-              className="min-h-48 font-mono md:min-h-64 lg:min-h-0 lg:flex-1 lg:resize-none"
+              style={{ flex: 1 }}
+              styles={{ root: { display: "flex", flex: 1, flexDirection: "column" }, wrapper: { flex: 1 }, input: { height: "100%", minHeight: 240, resize: "none", fontFamily: "monospace" } }}
             />
-            {error && (
-              <p
-                role="alert"
-                className="max-h-20 overflow-auto text-sm text-destructive"
-              >
-                {error}
-              </p>
-            )}
-          </div>
+            {error && <Alert color="red">{error}</Alert>}
+          </Stack>
 
-          <div className="min-w-0 space-y-3 p-4 lg:flex lg:min-h-0 lg:flex-col lg:p-5">
-            <div className="flex h-7 items-center justify-between gap-3">
-              <label
-                htmlFor="prettify-output"
-                className="text-xs font-semibold tracking-wider uppercase"
-              >
-                Formatted {format}
-              </label>
+          <Stack gap="xs" h="100%">
+            <Group h={30} justify="space-between" align="center">
+              <Text size="sm" fw={500}>Formatted {format}</Text>
               <Button
-                type="button"
-                variant="ghost"
+                variant="subtle"
                 size="xs"
+                leftSection={isCopied ? <Check size={14} /> : <Clipboard size={14} />}
                 onClick={handleCopy}
                 disabled={!output}
               >
-                {isCopied ? (
-                  <Check data-icon="inline-start" />
-                ) : (
-                  <Clipboard data-icon="inline-start" />
-                )}
                 {isCopied ? "Copied" : "Copy"}
               </Button>
-            </div>
+            </Group>
             <Textarea
               id="prettify-output"
               value={output}
               readOnly
               placeholder="Formatted output will appear here…"
-              className="min-h-48 font-mono md:min-h-64 lg:min-h-0 lg:flex-1 lg:resize-none"
+              style={{ flex: 1 }}
+              styles={{ root: { display: "flex", flex: 1, flexDirection: "column" }, wrapper: { flex: 1 }, input: { height: "100%", minHeight: 240, resize: "none", fontFamily: "monospace" } }}
             />
-          </div>
-        </div>
+          </Stack>
+        </SimpleGrid>
 
-        <div className="shrink-0 border-t border-border p-4 md:px-5">
+        <Group p="md" style={{ borderTop: "1px solid var(--mantine-color-default-border)" }}>
           <Button
-            type="button"
             onClick={handlePrettify}
             disabled={!input || isFormatting}
+            loading={isFormatting}
+            leftSection={!isFormatting ? <Sparkles size={16} /> : undefined}
           >
-            <Sparkles data-icon="inline-start" />
             {isFormatting ? "Formatting…" : `Prettify ${format}`}
           </Button>
-        </div>
-      </div>
-    </section>
+        </Group>
+      </Paper>
+    </Stack>
   );
 }
