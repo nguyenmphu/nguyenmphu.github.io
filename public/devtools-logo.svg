@@ -1,0 +1,42 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="156"
+  height="40"
+  viewBox="0 0 156 40"
+  role="img"
+  aria-labelledby="title description"
+>
+  <title id="title">DevTools</title>
+  <desc id="description">DevTools logo with a code symbol</desc>
+
+  <style>
+    .mark { fill: #171721; }
+    .code { stroke: #fff; }
+    .wordmark { fill: #171721; }
+    @media (prefers-color-scheme: dark) {
+      .mark { fill: #f8f7fb; }
+      .code { stroke: #171721; }
+      .wordmark { fill: #f8f7fb; }
+    }
+  </style>
+
+  <rect class="mark" x="2" y="2" width="36" height="36" rx="6" />
+  <path
+    class="code"
+    d="m15.5 13-6 7 6 7M24.5 13l6 7-6 7M22 10.5l-4 19"
+    fill="none"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <text
+    class="wordmark"
+    x="48"
+    y="26.5"
+    font-family="Noto Sans, Inter, ui-sans-serif, system-ui, sans-serif"
+    font-size="20"
+    font-weight="700"
+    letter-spacing="-0.5"
+  >DevTools</text>
+</svg>

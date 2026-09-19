@@ -1,9 +1,21 @@
 import { useState } from 'react'
 import { Check, Clipboard, Download, QrCode, Sparkles } from 'lucide-react'
 import QRCode from 'qrcode'
-
-import { Button } from './ui/button.tsx'
-import { Textarea } from './ui/textarea.tsx'
+import {
+  Alert,
+  Box,
+  Button,
+  Center,
+  Group,
+  Image,
+  Paper,
+  SegmentedControl,
+  SimpleGrid,
+  Stack,
+  Text,
+  Textarea,
+  Title,
+} from '@mantine/core'
 
 type ErrorCorrection = 'L' | 'M' | 'Q' | 'H'
 type QrSize = 256 | 512 | 1024
@@ -75,21 +87,21 @@ export default function QrCodeTool() {
   }
 
   return (
-    <section className="flex min-h-0 w-full flex-1 flex-col gap-4 overflow-auto px-4 py-5 sm:px-6 lg:overflow-hidden lg:px-8 lg:py-6">
-      <header className="space-y-2">
-        <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">Image tool</p>
-        <h1 className="font-heading text-4xl font-semibold tracking-tight md:text-5xl">QR Generator</h1>
-        <p className="max-w-2xl text-sm leading-6 text-muted-foreground md:text-base">
+    <Stack gap="lg" h="100%" style={{ overflowY: 'auto' }}>
+      <Stack gap={4}>
+        <Text size="xs" fw={700} tt="uppercase" c="dimmed" lts={2}>Image tool</Text>
+        <Title order={1}>QR Generator</Title>
+        <Text c="dimmed" maw={720}>
           Turn text, links, or contact details into a downloadable QR code. Generation stays in your browser.
-        </p>
-      </header>
+        </Text>
+      </Stack>
 
-      <div className="grid w-full min-w-0 border border-border bg-card lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.7fr)]">
-        <div className="min-w-0 space-y-5 border-b border-border p-4 lg:flex lg:min-h-0 lg:flex-col lg:border-r lg:border-b-0 lg:p-5">
-          <div className="space-y-3 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
-            <label htmlFor="qr-content" className="text-xs font-semibold tracking-wider uppercase">Content</label>
+      <Paper withBorder style={{ flex: 1 }}>
+        <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={0} h="100%">
+          <Stack p="lg">
             <Textarea
               id="qr-content"
+              label="Content"
               value={text}
               onChange={(event) => {
                 setText(event.target.value)
@@ -97,65 +109,54 @@ export default function QrCodeTool() {
                 setError('')
               }}
               placeholder="Enter text or paste a URL…"
-              className="min-h-48 font-mono lg:min-h-0 lg:flex-1 lg:resize-none"
+              minRows={10}
+              autosize
+              styles={{ input: { fontFamily: 'monospace' } }}
             />
-          </div>
 
-          <div className="grid gap-5 sm:grid-cols-2">
-            <div className="space-y-2">
-              <p className="text-xs font-semibold tracking-wider uppercase">Image size</p>
-              <div className="flex flex-wrap gap-2">
-                {SIZES.map((item) => (
-                  <Button key={item} type="button" size="sm" variant={size === item ? 'default' : 'outline'} onClick={() => setSize(item)}>
-                    {item}px
-                  </Button>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-xs font-semibold tracking-wider uppercase">Error correction</p>
-              <div className="flex flex-wrap gap-2">
-                {ERROR_LEVELS.map((level) => (
-                  <Button key={level} type="button" size="sm" variant={errorCorrection === level ? 'default' : 'outline'} onClick={() => setErrorCorrection(level)} title={ERROR_LABELS[level]}>
-                    {level}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
+            <SimpleGrid cols={{ base: 1, sm: 2 }}>
+              <Stack gap="xs">
+                <Text size="sm" fw={600}>Image size</Text>
+                <SegmentedControl value={String(size)} onChange={(value) => setSize(Number(value) as QrSize)} data={SIZES.map((item) => ({ label: `${item}px`, value: String(item) }))} />
+              </Stack>
+              <Stack gap="xs">
+                <Text size="sm" fw={600}>Error correction</Text>
+                <SegmentedControl value={errorCorrection} onChange={(value) => setErrorCorrection(value as ErrorCorrection)} data={ERROR_LEVELS.map((level) => ({ label: level, value: level }))} />
+                <Text size="xs" c="dimmed">{ERROR_LABELS[errorCorrection]}</Text>
+              </Stack>
+            </SimpleGrid>
 
-          {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+            {error && <Alert color="red">{error}</Alert>}
 
-          <Button type="button" onClick={handleGenerate} disabled={!text || isGenerating} className="sm:w-fit">
-            <Sparkles data-icon="inline-start" />
-            {isGenerating ? 'Generating…' : 'Generate QR code'}
-          </Button>
-        </div>
+            <Button onClick={handleGenerate} disabled={!text} loading={isGenerating} leftSection={!isGenerating ? <Sparkles size={16} /> : undefined} style={{ alignSelf: 'flex-start' }}>
+              {isGenerating ? 'Generating…' : 'Generate QR code'}
+            </Button>
+          </Stack>
 
-        <div className="flex min-h-80 flex-col items-center justify-center gap-5 bg-muted/25 p-6">
-          {imageUrl ? (
-            <>
-              <div className="border border-border bg-white p-3 shadow-sm">
-                <img src={imageUrl} alt="Generated QR code" className="size-full max-h-80 max-w-80" />
-              </div>
-              <div className="flex flex-wrap justify-center gap-2">
-                <Button type="button" variant="outline" onClick={handleCopy}>
-                  {isCopied ? <Check data-icon="inline-start" /> : <Clipboard data-icon="inline-start" />}
+          <Center p="xl" mih={380} bg="var(--mantine-color-default-hover)">
+            {imageUrl ? (
+              <Stack align="center">
+                <Box bg="white" p="sm" style={{ border: '1px solid var(--mantine-color-default-border)', borderRadius: 'var(--mantine-radius-md)' }}>
+                  <Image src={imageUrl} alt="Generated QR code" w="100%" maw={320} />
+                </Box>
+                <Group justify="center">
+                  <Button variant="default" onClick={handleCopy} leftSection={isCopied ? <Check size={16} /> : <Clipboard size={16} />}>
                   {isCopied ? 'Copied' : 'Copy image'}
                 </Button>
-                <Button type="button" onClick={handleDownload}>
-                  <Download data-icon="inline-start" /> Download PNG
-                </Button>
-              </div>
-            </>
-          ) : (
-            <div className="max-w-xs space-y-3 text-center text-muted-foreground">
-              <QrCode className="mx-auto size-16 stroke-1" aria-hidden="true" />
-              <p className="text-sm">Your generated QR code will appear here.</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
+                  <Button onClick={handleDownload} leftSection={<Download size={16} />}>
+                    Download PNG
+                  </Button>
+                </Group>
+              </Stack>
+            ) : (
+              <Stack align="center" c="dimmed">
+                <QrCode size={64} strokeWidth={1} aria-hidden="true" />
+                <Text size="sm" ta="center">Your generated QR code will appear here.</Text>
+              </Stack>
+            )}
+          </Center>
+        </SimpleGrid>
+      </Paper>
+    </Stack>
   )
 }
